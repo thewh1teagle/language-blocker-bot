@@ -13,7 +13,8 @@ def valid_message(message: str) -> bool:
     for character in message:
         if character.isalpha():
             character_code = ord(character)
-            if character_code not in range(97, 122) or character_code not in range(65, 90):
+            if character_code not in range(97, 122+1) and character_code not in range(65, 90+1):
+                print(f'invalid character {character}')
                 return False
     return True
         
