@@ -12,9 +12,10 @@ from threading import Thread
 def valid_message(message: str) -> bool:
     for character in message:
         if character.isalpha():
-            if character not in range(97, 122) or character not in range(65, 90):
+            character_code = ord(character)
+            if character_code not in range(97, 122) or character_code not in range(65, 90):
                 return False
-        return True
+    return True
         
 def message_handler(update, context):
     """Send a message when the command /start is issued."""
