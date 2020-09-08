@@ -6,7 +6,8 @@ from telegram.ext import (
     MessageHandler
 )
 from telegram import Bot
-
+from time import sleep
+from threading import Thread
 
 def valid_message(message: str) -> bool:
     forbidden_pattern = re.compile('[א-ת]')
@@ -17,11 +18,14 @@ def message_handler(update, context):
     message_text = update.message.text
     user_name = update.message.from_user.first_name
     if not valid_message(message_text):
-        print(update)
-
-        update.message.reply_text('{}, Please write in english only dude!'.format(user_name))
+        my_message = update.message.reply_text('{}, Please write in english only dude!'.format(user_name))
         bot.delete_message(chat_id=update.message.chat.id, message_id=update.message.message_id)
+        Thread(target=delayed_message_delete, args=(3, my_message)).start()
 
+
+def delayed_message_delete(seconds, my_message):
+    sleep(seconds)
+    bot.delete_message(chat_id=my_message.chat.id, message_id=my_message.message_id)
 
 if __name__ == '__main__':
     
