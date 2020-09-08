@@ -10,9 +10,12 @@ from time import sleep
 from threading import Thread
 
 def valid_message(message: str) -> bool:
-    forbidden_pattern = re.compile('[א-ת]')
-    return re.search(forbidden_pattern, message) == None # Not found any character
-
+    for character in message:
+        if character.isalpha():
+            if character not in range(97, 122) or character not in range(65, 90):
+                return False
+        return True
+        
 def message_handler(update, context):
     """Send a message when the command /start is issued."""
     message_text = update.message.text
