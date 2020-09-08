@@ -1,4 +1,3 @@
-import re
 from os import environ
 from sys import argv
 from telegram.ext import (
@@ -6,31 +5,29 @@ from telegram.ext import (
     MessageHandler
 )
 from telegram import Bot
-from time import sleep
-from threading import Thread
+from threading import Timer
+
+RANGES = range(97, 122), range(65, 91)
 
 def valid_message(message: str) -> bool:
     for character in message:
         if character.isalpha():
             character_code = ord(character)
-            if character_code not in range(97, 122+1) and character_code not in range(65, 90+1):
+            if all(character_code not in x for x in RANGES):
                 print(f'invalid character {character}')
                 return False
     return True
         
-def message_handler(update, context):
+def message_handler(update, _):
     """Send a message when the command /start is issued."""
     message_text = update.message.text
     user_name = update.message.from_user.first_name
     if not valid_message(message_text):
         my_message = update.message.reply_text('{}, Please write in english only dude!'.format(user_name))
         bot.delete_message(chat_id=update.message.chat.id, message_id=update.message.message_id)
-        Thread(target=delayed_message_delete, args=(3, my_message)).start()
+        timer = Timer(3, bot.delete_message, kwargs={"chat_id": my_message.chat.id, "message_id": my_message.message_id})
+        timer.start()
 
-
-def delayed_message_delete(seconds, my_message):
-    sleep(seconds)
-    bot.delete_message(chat_id=my_message.chat.id, message_id=my_message.message_id)
 
 if __name__ == '__main__':
     
@@ -61,5 +58,3 @@ if __name__ == '__main__':
     print('Bot running')
     updater.start_polling()
     updater.idle()
-
-
