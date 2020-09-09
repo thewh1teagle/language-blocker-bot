@@ -7,7 +7,7 @@ from telegram.ext import (
 from telegram import Bot
 from threading import Timer
 
-RANGES = range(97, 122), range(65, 91)
+RANGES = range(97, 123), range(65, 91)
 
 def valid_message(message: str) -> bool:
     for character in message:
